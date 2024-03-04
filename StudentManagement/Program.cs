@@ -1,26 +1,31 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using StudentManagement.Models;
-using StudentManagement.Services;
 //using StudentManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration
+builder.Configuration.AddJsonFile("appsettings.json", optional: false);
+
+// Configure MongoDB
 builder.Services.Configure<StudentStoreDatabaseSettings>(
-                builder.Configuration.GetSection(nameof(StudentStoreDatabaseSettings)));
+    builder.Configuration.GetSection(nameof(StudentStoreDatabaseSettings)));
 
 builder.Services.AddSingleton<IStudentStoreDatabaseSettings>(sp =>
     sp.GetRequiredService<IOptions<StudentStoreDatabaseSettings>>().Value);
 
 builder.Services.AddSingleton<IMongoClient>(s =>
-        new MongoClient(builder.Configuration.GetValue<string>("StudentStoreDatabaseSettings:ConnectionString")));
+    new MongoClient(builder.Configuration.GetValue<string>("StudentStoreDatabaseSettings:ConnectionString")));
 
-builder.Services.AddScoped<IstudentService, StudentService>();
+// Services
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IStudentAddressService, StudentAddressService>(); // Added
 
-// Add services to the container.
-
+// Add controllers
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+
+// Add Swagger
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -33,10 +38,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
-

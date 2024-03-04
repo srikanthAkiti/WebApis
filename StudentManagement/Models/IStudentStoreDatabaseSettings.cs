@@ -1,12 +1,10 @@
-﻿using System;
-namespace StudentManagement.Models
+﻿namespace StudentManagement.Models
 {
-	public interface IStudentStoreDatabaseSettings
-	{
-		string StudentCoursesCollectionName { get; set; }
-		string ConnectionString { get; set; }
-		string DatabaseName { get; set; }
-
+    public interface IStudentStoreDatabaseSettings
+    {
+        string StudentCoursesCollectionName { get; set; }
+        string ConnectionString { get; set; }
+        string DatabaseName { get; set; }
+        string StudentAddressesCollectionName { get; set; }
     }
 }
-
